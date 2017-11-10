@@ -171,9 +171,27 @@ class RCTKeyboardToolbarTextInput extends React.Component {
             data
         });
     }
+        
     focus() {
         this.refs.input.focus();
     }
+        
+    isFocused() {
+        return this.refs.input && this.refs.input.isFocused();
+    }
+
+    blur() {
+        this.refs.input.blur();
+    }
+
+    clear() {
+        this.refs.input.clear();
+    }
+
+    update() {
+        this.refs.input.update();
+    }
+    
     render() {
         return (<TextInput {...this.props} ref="input"/>);
     }
