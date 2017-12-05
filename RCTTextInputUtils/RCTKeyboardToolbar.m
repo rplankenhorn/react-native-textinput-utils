@@ -108,7 +108,13 @@ RCT_EXPORT_METHOD(configure:(nonnull NSNumber *)reactNode
         }
         
         [numberToolbar sizeToFit];
-        textView.inputAccessoryView = numberToolbar;
+
+		if ([textView isKindOfClass:[RCTTextField class]]) {
+            RCTTextField *rctTextField = (RCTTextField *)textView;
+            rctTextField.textField.inputAccessoryView = numberToolbar;
+        } else {
+            RCTLogWarn(@"RCTKeyboardToolbar: TAG #%@ Cannot set inputAccessoryView", reactNode);
+        }
         
         callback(@[[NSNull null], [currentUid stringValue]]);
     }];
