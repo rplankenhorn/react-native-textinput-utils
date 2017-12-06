@@ -109,7 +109,7 @@ RCT_EXPORT_METHOD(configure:(nonnull NSNumber *)reactNode
         
         [numberToolbar sizeToFit];
 
-		if ([textView isKindOfClass:[RCTTextField class]]) {
+        if ([textView isKindOfClass:[RCTTextField class]]) {
             RCTTextField *rctTextField = (RCTTextField *)textView;
             rctTextField.textField.inputAccessoryView = numberToolbar;
         } else {
