@@ -11,6 +11,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
 #import "RCTTextField.h"
+#import "RCTUITextField.h"
 #import "RCTTextView.h"
 #import <React/RCTUIManager.h>
 #import <React/RCTEventDispatcher.h>
