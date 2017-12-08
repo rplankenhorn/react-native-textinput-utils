@@ -16,7 +16,7 @@
     UITextPosition* startPosition = [self.backedTextInputView positionFromPosition:beginning offset:range.location];
     UITextPosition* endPosition = [self.backedTextInputView positionFromPosition:beginning offset:range.location + range.length];
     UITextRange* selectionRange = [self.backedTextInputView textRangeFromPosition:startPosition toPosition:endPosition];
-    [self.backedTextInputView setSelectedTextRange:selectionRange];
+    [self.backedTextInputView setSelectedTextRange:selectionRange notifyDelegate:YES];
 }
 
 - (void)invalidateInputAccessoryView {
