@@ -46,14 +46,14 @@ RCT_EXPORT_METHOD(configure:(nonnull NSNumber *)reactNode
         
         // The convert is little bit dangerous, change it if you are going to fock the project
         // Or do not assign any non-common property between UITextView and UITextView
-        UITextField *textView;
+        UIView<RCTBackedTextInputViewProtocol> *textView;
         if ([view class] == [RCTTextView class]) {
             RCTTextView *reactNativeTextView = ((RCTTextView *)view);
-            textView = [reactNativeTextView getTextView];
+            textView = reactNativeTextView.backedTextInputView;
         }
         else {
             RCTTextField *reactNativeTextView = ((RCTTextField *)view);
-            textView = [reactNativeTextView textField];
+            textView = reactNativeTextView.backedTextInputView;
         }
         
         if (options[@"tintColor"]) {
@@ -89,33 +89,8 @@ RCT_EXPORT_METHOD(configure:(nonnull NSNumber *)reactNode
         }
         numberToolbar.items = toolbarItems;
         
-        NSArray *pickerData = [RCTConvert NSArray:options[@"pickerViewData"]];
-        
-        if (pickerData.count > 0) {
-            RCTKeyboardPicker *pickerView = [[RCTKeyboardPicker alloc]init];
-            pickerView.tag = [currentUid intValue];
-            [pickerView setCallbackObject:self withSelector:@selector(valueSelected:)];
-            [pickerView setData:pickerData];
-            textView.inputView = pickerView;
-        }
-        
-        NSDictionary *datePickerViewData = [RCTConvert NSDictionary:options[@"datePickerOptions"]];
-        if(datePickerViewData != nil){
-            RCTKeyboardDatePicker *datePickerView = [[RCTKeyboardDatePicker alloc] init];
-            datePickerView.tag = [currentUid intValue];
-            [datePickerView setCallbackObject:self withSelector:@selector(dateSelected:)];
-            [datePickerView setOptions:datePickerViewData];
-            textView.inputView = datePickerView;
-        }
-        
         [numberToolbar sizeToFit];
-
-        if ([textView isKindOfClass:[RCTTextField class]]) {
-            RCTTextField *rctTextField = (RCTTextField *)textView;
-            rctTextField.textField.inputAccessoryView = numberToolbar;
-        } else {
-            RCTLogWarn(@"RCTKeyboardToolbar: TAG #%@ Cannot set inputAccessoryView", reactNode);
-        }
+        textView.inputAccessoryView = numberToolbar;
         
         callback(@[[NSNull null], [currentUid stringValue]]);
     }];
@@ -149,7 +124,8 @@ RCT_EXPORT_METHOD(moveCursorToLast:(nonnull NSNumber *)reactNode) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             UITextPosition *position = [textView.backedTextInputView endOfDocument];
-            textView.backedTextInputView.selectedTextRange = [textView.backedTextInputView textRangeFromPosition:position toPosition:position];
+            UITextRange *range = [textView.backedTextInputView textRangeFromPosition:position toPosition:position];
+            [textView.backedTextInputView setSelectedTextRange:range notifyDelegate:YES];
         });
     }];
 }
@@ -173,7 +149,8 @@ RCT_EXPORT_METHOD(setSelectedTextRange:(nonnull NSNumber *)reactNode
         dispatch_async(dispatch_get_main_queue(), ^{
             UITextPosition *from = [textView.backedTextInputView positionFromPosition:[textView.backedTextInputView beginningOfDocument] offset:range.location];
             UITextPosition *to = [textView.backedTextInputView positionFromPosition:from offset:range.length];
-            [textView.backedTextInputView setSelectedTextRange:[textView.backedTextInputView textRangeFromPosition:from toPosition:to]];
+            UITextRange *range = [textView.backedTextInputView textRangeFromPosition:from toPosition:to];
+            [textView.backedTextInputView setSelectedTextRange:range notifyDelegate:YES];
         });
     }];
 }
